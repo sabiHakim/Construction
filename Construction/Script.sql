@@ -121,6 +121,8 @@ create  table payement(
         montant double precision,
         date_payement date
 );
+create or replace view sumPayement as
+       select idDevis, sum(montant) from payement group by idDevis;
 --
 CREATE VIEW vue_devis_payement AS
 SELECT
@@ -135,11 +137,9 @@ SELECT
     vd.idfinition,
     vd.finition,
     vd.prixtotal,
-    p.idPayement,
-    p.montant AS montant_payement,
-    p.date_payement
+    p.sum
 FROM vue_devis vd
-         JOIN payement p ON vd.id = p.idDevis;
+         JOIN sumPayement p ON vd.id = p.idDevis;
 --
 CREATE VIEW vue_details_travaux AS
 SELECT
@@ -252,7 +252,6 @@ RETURNS void
 LANGUAGE plpgsql
 AS $$
 BEGIN
-
 delete from payement;
 delete from  detail_devis ;
 delete from csvdevis;

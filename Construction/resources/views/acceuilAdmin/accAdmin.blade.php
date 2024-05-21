@@ -1,6 +1,22 @@
 @extends('base.baseAdmin')
 @section('title','acceuilAdmin')
 @section('content')
+    <style>
+        .bg-orange {
+            background-color: orange !important;
+        }
+        .bg-danger {
+            background-color: red !important;
+        }
+        .bg-warning {
+            background-color: yellow !important;
+            color: black; /* Pour améliorer la lisibilité du texte sur fond jaune */
+        }
+        .bg-success {
+            background-color: green !important;
+        }
+
+    </style>
     <div class="pagetitle">
         <h1>Dashboard</h1>
         <nav>
@@ -55,11 +71,25 @@
                                         <th SCOPE="COL"> finition</th>
                                         <th SCOPE="COL"> prixtotal</th>
                                         <th SCOPE="COL"> Montant Paye</th>
+                                        <th SCOPE="COL"> Payement Effectuer</th>
 
                                     </tr>
                                     </thead>
                                     <tbody>
                                     @foreach($dev as $d)
+                                        @php
+                                            $pourcentage = round(\App\Models\DevisModel::pourcentage($d->prixtotal,$d->sum),2);
+                                            $progressClass = '';
+                                            if ($pourcentage < 20) {
+                                                $progressClass = 'bg-danger';
+                                            } elseif ($pourcentage < 50) {
+                                                $progressClass = 'bg-warning';
+                                            } elseif ($pourcentage < 80) {
+                                                $progressClass = 'bg-orange';
+                                            } else {
+                                                $progressClass = 'bg-success';
+                                            }
+                                        @endphp
                                     <tr>
 {{--                                        <th scope="row">{{$d->date_debut_travaux}}</th>--}}
 {{--                                        <th scope="row">{{$d->date_fin}}</th>--}}
@@ -68,7 +98,14 @@
                                         <th scope="row">{{$d->dureconstruction}} j</th>
                                         <th scope="row">{{$d->finition}}</th>
                                         <th scope="row">{{number_format($d->prixtotal, 0, ',', ' ')}} Ar</th>
-                                        <th scope="row">{{number_format($d->montant_payement, 0, ',', ' ')}} Ar</th>
+                                        <th scope="row">{{number_format($d->sum, 0, ',', ' ')}} Ar</th>
+                                        <th scope="row">
+                                            <span>{{ $pourcentage }}%</span>
+                                            <div class="progress" style="height: 5px;">
+                                                <div class="progress-bar {{ $progressClass }}" role="progressbar" style="width: {{ $pourcentage }}%;" aria-valuenow="{{ $pourcentage }}" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                        </th>
                                         <td>
                                             <a href="DetailDevisAdmin/{{$d->idmaison}}" class="mr-2"><i class="bi bi-eye me-2 " ></i></a>
 {{--                                            <a href="#" onclick="return confirm('Voulez-vous vraiment supprimer cet élément ?');"><i class=" text-danger bi bi-trash me-2"></i></a>--}}

@@ -53,6 +53,12 @@ class DevisModel extends Model
             $re = DB::select("select * from vue_devis_payement");
             return $re;
         }
+        public  static function pourcentage($total,$payement)
+        {
+            $re = ($payement*100)/$total;
+            return $re;
+        }
+
         public  static function getTravaux_MaisonAdmin($id)
         {
             $res = DB::select("SELECT * FROM vue_details_travaux where maisonid = ?",[$id]);

@@ -46,7 +46,11 @@ class LoginController extends Controller
     {
         $dev = DevisModel::getAllDevis();
         $sum = DevisModel::getsumAllDevis();
-        return view('acceuilAdmin.accAdmin',compact('dev','sum'));
+        dd($dev);
+//        foreach ($dev as $d){
+//            $res = DevisModel::pourcentage($d->prixtotal,$d->montant_payement);
+//        }
+        return view('acceuilAdmin.accAdmin',compact('dev','sum','res'));
     }
     public  function  traitLogin(Request $request)
     {
