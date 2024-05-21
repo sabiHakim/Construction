@@ -22,4 +22,10 @@ class Payement extends Model
         DB::select("INSERT INTO payement(reference,iddevis,montant,date_payement) values (?,?,?,?)",[$reference,$iddevis,$montant,$date_payement]);
     }
 
+    public function reste_a_Payer($iddevis)
+    {
+      $res  =  DB::select("select  prixtotal-sum as reste from vue_devis_payement where id_devis = ?",[$iddevis]);
+      return $res;
+    }
+
 }
